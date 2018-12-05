@@ -1,0 +1,80 @@
+Altera SOPC Builder Version 10.11 Build 197
+Copyright (c) 1999-2009 Altera Corporation.  All rights reserved.
+
+
+No .sopc_builder configuration file(!)
+# 2013.04.12 14:23:36 (*) mk_custom_sdk starting
+# 2013.04.12 14:23:36 (*) Reading project F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor.ptf.
+
+# 2013.04.12 14:23:37 (*) Finding all CPUs
+# 2013.04.12 14:23:37 (*) Finding all available components
+# 2013.04.12 14:23:37 (*) Reading F:/ECE3073_labs/Lab_4/.sopc_builder/install.ptf
+
+# 2013.04.12 14:23:37 (*) Found 63 components
+
+# 2013.04.12 14:23:37 (*) Finding all peripherals
+
+# 2013.04.12 14:23:37 (*) Finding software components
+
+# 2013.04.12 14:23:37 (*) (Legacy SDK Generation Skipped)
+# 2013.04.12 14:23:37 (*) (All TCL Script Generation Skipped)
+# 2013.04.12 14:23:37 (*) (No Libraries Built)
+# 2013.04.12 14:23:37 (*) (Contents Generation Skipped)
+# 2013.04.12 14:23:37 (*) mk_custom_sdk finishing
+
+# 2013.04.12 14:23:37 (*) Starting generation for system: Lab_3_Nios_processor.
+
+.
+.
+.
+.....
+
+# 2013.04.12 14:23:39 (*) Running Generator Program for cpu_0
+
+# 2013.04.12 14:23:44 (*) Starting Nios II generation
+# 2013.04.12 14:23:45 (*)   Checking for plaintext license.
+# 2013.04.12 14:23:46 (*)   Plaintext license not found.
+# 2013.04.12 14:23:46 (*)   No license required to generate encrypted Nios II/e.
+# 2013.04.12 14:23:46 (*)   Getting CPU configuration settings
+# 2013.04.12 14:23:46 (*)   Elaborating CPU configuration settings
+# 2013.04.12 14:23:46 (*)   Creating all objects for CPU
+# 2013.04.12 14:23:48 (*)   Generating HDL from CPU objects
+# 2013.04.12 14:23:48 (*)   Creating plain-text HDL
+
+# 2013.04.12 14:23:50 (*) Done Nios II generation
+
+# 2013.04.12 14:23:51 (*) Running Generator Program for ROM
+
+# 2013.04.12 14:23:52 (*) Running Generator Program for RAM
+
+# 2013.04.12 14:23:53 (*) Running Generator Program for OUT_LEDR_8_Bits
+
+# 2013.04.12 14:23:54 (*) Running Generator Program for FLAG_1_bit
+
+# 2013.04.12 14:23:56 (*) Running Generator Program for LEDG_1_bit
+
+# 2013.04.12 14:23:57 (*) Running Generator Program for KEY1_1_bit
+
+# 2013.04.12 14:23:58 (*) Running Generator Program for IN_MSB_1_bit
+
+
+# 2013.04.12 14:24:00 (*) Making arbitration and system (top) modules.
+
+# 2013.04.12 14:24:03 (*) Generating Quartus symbol for top level: Lab_3_Nios_processor
+
+# 2013.04.12 14:24:03 (*) Symbol F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor.bsf already exists, no need to regenerate
+# 2013.04.12 14:24:03 (*) Creating command-line system-generation script: F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor_generation_script
+
+# 2013.04.12 14:24:04 (*) Running setup for HDL simulator: modelsim
+
+
+# 2013.04.12 14:24:04 (*) Completed generation for system: Lab_3_Nios_processor.
+# 2013.04.12 14:24:04 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
+  SOPC Builder database : F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor.ptf 
+  System HDL Model : F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor.v 
+  System Generation Script : F:/ECE3073_labs/Lab_4/Lab_3_Nios_processor_generation_script 
+
+# 2013.04.12 14:24:04 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
+
+
+Press 'Exit' to exit.

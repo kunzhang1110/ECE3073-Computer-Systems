@@ -1,0 +1,8 @@
+#exclude
+*.docx
+*.zip
+*.pptx
+/Lecture Notes
+/Past Exams
+/Textbooks and References
+ECE3073 Unit Guide

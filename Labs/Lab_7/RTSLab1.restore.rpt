@@ -1,0 +1,110 @@
+Restore Archived Project report for RTSLab1
+Wed May 01 09:41:32 2013
+Quartus II Version 10.1 Build 197 01/19/2011 Service Pack 1 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Restore Archived Project Summary
+  3. Restore Archived Project Messages
+  4. Files Restored
+  5. Files Not Restored
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2011 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++-------------------------------------------------------------------------+
+; Restore Archived Project Summary                                        ;
++---------------------------------+---------------------------------------+
+; Restore Archived Project Status ; Successful - Wed May 01 09:41:32 2013 ;
+; Revision Name                   ; RTSLab1                               ;
+; Top-level Entity Name           ; RTSLab1                               ;
+; Family                          ; Cyclone II                            ;
++---------------------------------+---------------------------------------+
+
+
++-----------------------------------+
+; Restore Archived Project Messages ;
++-----------------------------------+
+Info: Successfully restored 'C:/Users/zmche3/AppData/Local/Temp/RTSLab1.qar' into the 'E:/ECE3073_labs/Lab_6/' directory
+Info: Generated report 'RTSLab1.restore.rpt'
+Info: Evaluation of Tcl script c:/altera/10.1/quartus/common/tcl/apps/qpm/qar.tcl was successful
+Info: Quartus II Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 175 megabytes
+    Info: Processing ended: Wed May 01 09:41:32 2013
+    Info: Elapsed time: 00:00:06
+    Info: Total CPU time (on all processors): 00:00:01
+
+
++----------------------------------------------------+
+; Files Restored                                     ;
++----------------------------------------------------+
+; File Name                                          ;
++----------------------------------------------------+
+; HEX0.v                                             ;
+; HEX1.v                                             ;
+; HEX2.v                                             ;
+; HEX3.v                                             ;
+; HEX4.v                                             ;
+; HEX5.v                                             ;
+; HEX6.v                                             ;
+; HEX7.v                                             ;
+; KEY.v                                              ;
+; LEDG.v                                             ;
+; RTSLab1.qpf                                        ;
+; RTSLab1.qsf                                        ;
+; RTSLab1.sopc                                       ;
+; RTSLab1.v                                          ;
+; RTSLab1CPU.qip                                     ;
+; RTSLab1CPU.v                                       ;
+; cpu_0.ocp                                          ;
+; cpu_0.sdc                                          ;
+; cpu_0.v                                            ;
+; cpu_0_bht_ram.mif                                  ;
+; cpu_0_dc_tag_ram.mif                               ;
+; cpu_0_ic_tag_ram.mif                               ;
+; cpu_0_jtag_debug_module_sysclk.v                   ;
+; cpu_0_jtag_debug_module_tck.v                      ;
+; cpu_0_jtag_debug_module_wrapper.v                  ;
+; cpu_0_mult_cell.v                                  ;
+; cpu_0_oci_test_bench.v                             ;
+; cpu_0_ociram_default_contents.mif                  ;
+; cpu_0_rf_ram_a.mif                                 ;
+; cpu_0_rf_ram_b.mif                                 ;
+; cpu_0_test_bench.v                                 ;
+; incremental_db/compiled_partitions/RTSLab1.db_info ;
+; jtag_uart_0.v                                      ;
+; lcd_0.v                                            ;
+; sopc_add_qip_file.tcl                              ;
+; timer_0.v                                          ;
+; assignment_defaults.qdf                            ;
++----------------------------------------------------+
+
+
++--------------------+
+; Files Not Restored ;
++--------------------+
+; File Name          ;
++--------------------+
+
+

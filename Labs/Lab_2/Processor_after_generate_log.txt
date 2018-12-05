@@ -1,0 +1,72 @@
+Altera SOPC Builder Version 10.11 Build 197
+Copyright (c) 1999-2009 Altera Corporation.  All rights reserved.
+
+
+No .sopc_builder configuration file(!)
+# 2013.03.20 11:04:37 (*) mk_custom_sdk starting
+# 2013.03.20 11:04:37 (*) Reading project E:/ECE3073_labs/Lab_2/Processor_after_generate.ptf.
+
+# 2013.03.20 11:04:38 (*) Finding all CPUs
+# 2013.03.20 11:04:38 (*) Finding all available components
+# 2013.03.20 11:04:38 (*) Reading E:/ECE3073_labs/Lab_2/.sopc_builder/install.ptf
+
+# 2013.03.20 11:04:38 (*) Found 63 components
+
+# 2013.03.20 11:04:39 (*) Finding all peripherals
+
+# 2013.03.20 11:04:39 (*) Finding software components
+
+# 2013.03.20 11:04:39 (*) (Legacy SDK Generation Skipped)
+# 2013.03.20 11:04:39 (*) (All TCL Script Generation Skipped)
+# 2013.03.20 11:04:39 (*) (No Libraries Built)
+# 2013.03.20 11:04:39 (*) (Contents Generation Skipped)
+# 2013.03.20 11:04:39 (*) mk_custom_sdk finishing
+
+# 2013.03.20 11:04:39 (*) Starting generation for system: Processor_after_generate.
+
+.
+..
+..
+
+# 2013.03.20 11:04:40 (*) Running Generator Program for cpu_0
+
+# 2013.03.20 11:04:44 (*) Starting Nios II generation
+# 2013.03.20 11:04:44 (*)   Checking for plaintext license.
+# 2013.03.20 11:04:45 (*)   Plaintext license not found.
+# 2013.03.20 11:04:45 (*)   No license required to generate encrypted Nios II/e.
+# 2013.03.20 11:04:45 (*)   Getting CPU configuration settings
+# 2013.03.20 11:04:45 (*)   Elaborating CPU configuration settings
+# 2013.03.20 11:04:45 (*)   Creating all objects for CPU
+# 2013.03.20 11:04:47 (*)   Generating HDL from CPU objects
+# 2013.03.20 11:04:47 (*)   Creating plain-text HDL
+
+# 2013.03.20 11:04:49 (*) Done Nios II generation
+
+# 2013.03.20 11:04:50 (*) Running Generator Program for Onchip_RAM
+
+# 2013.03.20 11:04:51 (*) Running Generator Program for Onchip_ROM
+
+# 2013.03.20 11:04:52 (*) Running Generator Program for LEDPIO
+
+# 2013.03.20 11:04:53 (*) Running Generator Program for FlagPIO
+
+
+# 2013.03.20 11:04:54 (*) Making arbitration and system (top) modules.
+
+# 2013.03.20 11:04:57 (*) Generating Quartus symbol for top level: Processor_after_generate
+# 2013.03.20 11:04:57 (*) Symbol E:/ECE3073_labs/Lab_2/Processor_after_generate.bsf already exists, no need to regenerate
+# 2013.03.20 11:04:57 (*) Creating command-line system-generation script: E:/ECE3073_labs/Lab_2/Processor_after_generate_generation_script
+
+# 2013.03.20 11:04:57 (*) Running setup for HDL simulator: modelsim
+
+
+# 2013.03.20 11:04:58 (*) Completed generation for system: Processor_after_generate.
+# 2013.03.20 11:04:58 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
+  SOPC Builder database : E:/ECE3073_labs/Lab_2/Processor_after_generate.ptf 
+  System HDL Model : E:/ECE3073_labs/Lab_2/Processor_after_generate.v 
+  System Generation Script : E:/ECE3073_labs/Lab_2/Processor_after_generate_generation_script 
+
+# 2013.03.20 11:04:58 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
+
+
+Press 'Exit' to exit.

@@ -1,0 +1,4 @@
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1474): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1476): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1626): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(2524): conditional expression evaluates to a constant

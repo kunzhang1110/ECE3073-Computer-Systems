@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nios2_config>
+    <system>
+        <system_ptf filepath="true">..\Lab_4\Lab_3_Nios_processor.ptf</system_ptf>
+        <system_sof filepath="true">..\Lab_4\Lab_3_processor.sof</system_sof>
+        <cable>USB-Blaster [USB-0]</cable>
+        <processor JTAGHubInstanceID="0">cpu_0</processor>
+        <elf_section name="text">
+            <memory_device>RAM/s1</memory_device>
+            <memory_start_offset>0</memory_start_offset>
+        </elf_section>
+        <elf_section name="data">
+            <memory_device>RAM/s1</memory_device>
+            <memory_start_offset>0</memory_start_offset>
+        </elf_section>
+        <terminal JTAGHubInstanceID="-1"/>
+    </system>
+    <program>
+        <type>C</type>
+        <options>
+            <source_files>
+                <source_file filepath="true">Lab4_exception.c</source_file>
+                <source_file filepath="true">lab4_main.c</source_file>
+                <source_file filepath="true">nios2_ctrl_reg_macros.h</source_file>
+            </source_files>
+            <compiler_flags>-O1 -ffunction-sections -fverbose-asm -fno-inline</compiler_flags>
+            <emulate_unimpl_instructions>true</emulate_unimpl_instructions>
+            <use_small_c_library>false</use_small_c_library>
+        </options>
+    </program>
+</nios2_config>

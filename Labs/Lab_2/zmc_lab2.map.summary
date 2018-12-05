@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Wed Mar 20 11:07:28 2013
+Quartus II 64-Bit Version : 10.1 Build 197 01/19/2011 SP 1 SJ Full Version
+Revision Name : zmc_lab2
+Top-level Entity Name : zmc_lab2
+Family : Cyclone II
+Total logic elements : 1,229
+    Total combinational functions : 1,137
+    Dedicated logic registers : 564
+Total registers : 564
+Total pins : 12
+Total virtual pins : 0
+Total memory bits : 83,968
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0

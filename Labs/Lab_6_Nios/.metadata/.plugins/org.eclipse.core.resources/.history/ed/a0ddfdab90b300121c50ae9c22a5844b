@@ -1,0 +1,419 @@
+/*************************************************************************
+* Copyright (c) 2004 Altera Corporation, San Jose, California, USA.      *
+* All rights reserved. All use of this software and documentation is     *
+* subject to the License Agreement located at the end of this file below.*
+**************************************************************************
+* Description:                                                           *
+* The following is a simple hello world program running MicroC/OS-II.The * 
+* purpose of the design is to be a very simple application that just     *
+* demonstrates MicroC/OS-II running on NIOS II.The design doesn't account*
+* for issues such as checking system call return codes. etc.             *
+*                                                                        *
+* Requirements:                                                          *
+*   -Supported Example Hardware Platforms                                *
+*     Standard                                                           *
+*     Full Featured                                                      *
+*     Low Cost                                                           *
+*   -Supported Development Boards                                        *
+*     Nios II Development Board, Stratix II Edition                      *
+*     Nios Development Board, Stratix Professional Edition               *
+*     Nios Development Board, Stratix Edition                            *
+*     Nios Development Board, Cyclone Edition                            *
+*   -System Library Settings                                             *
+*     RTOS Type - MicroC/OS-II                                           *
+*     Periodic System Timer                                              *
+*   -Know Issues                                                         *
+*     If this design is run on the ISS, terminal output will take several*
+*     minutes per iteration.                                             *
+**************************************************************************/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "includes.h"
+#include "io.h"   // found at <Nios II EDS install path>/components/altera_nios2/HAL/inc/io.h.
+
+/* Definition of Task Stacks */
+#define   TASK_STACKSIZE       2048
+OS_STK    task1_stk[TASK_STACKSIZE];
+OS_STK    task2_stk[TASK_STACKSIZE];
+
+/* Definition of Task Priorities */
+
+#define TASK1_PRIORITY      1
+#define TASK2_PRIORITY      2
+#define PRIORITY_1      1
+#define PRIORITY_2      2
+#define PRIORITY_3      3
+
+/*      Code for 3.2, need to edit as que asked          *     //add "/" to enable the code and remove "/" to disable the code
+
+        //Prints "Hello World" and sleeps for three seconds
+        void task1(void* pdata)
+        {          
+          while (1)
+          { 
+            printf("Hello from task1\n");
+            OSTimeDlyHMSM(0, 0, 3, 0);
+          }
+        }
+                
+        // Prints "Hello World" and sleeps for three seconds 
+        void task2(void* pdata)
+        {
+          while (1)
+          { 
+            printf("Hello from task2\n");
+            OSTimeDlyHMSM(0, 0, 3, 0);
+          }
+        }
+
+        // The main function creates one task and starts multi-tasking 
+        int main(void)
+        {
+
+          OSTaskCreateExt(task1,
+                          NULL,
+                          (void *)&task1_stk[TASK_STACKSIZE-1],
+                          TASK1_PRIORITY,
+                          TASK1_PRIORITY,
+                          task1_stk,
+                          TASK_STACKSIZE,
+                          NULL,
+                          0);
+
+        OSTaskCreateExt(task2,
+                          NULL,
+                          (void *)&task2_stk[TASK_STACKSIZE-1],
+                          TASK2_PRIORITY,
+                          TASK2_PRIORITY,
+                          task2_stk,
+                          TASK_STACKSIZE,
+                          NULL,
+                          0);
+
+          OSStart();
+          return 0;
+        }
+/*      end of code*/
+
+
+/*      Code for 3.3 and 3.4                              */     //add "/" to enable the code and remove "/" to disable the code
+
+        //function:  Hexdisplay
+        //description: converts a 4 bit BCD number to 7 segment display format
+        int Hexdisplay(int iBinary4)
+        {
+              switch (iBinary4)
+              {
+                case 0:
+                    oHex = 0x40;
+                    break;
+                case 1:
+                    oHex = 0x79;
+                    break;
+                case 2: 
+                    oHex = 0x24;
+                    break;
+                case 3: 
+                    oHex = 0x30;
+                    break;
+                case 4:
+                    oHex = 0x19;
+                    break;
+                case 5: 
+                    oHex = 0x12;
+                    break;
+                case 6:
+                    oHex = 0x20;
+                    break;
+                case 7: 
+                    oHex = 0x78;
+                    break;
+                case 8:
+                    oHex = 0x0;
+                    break;
+                case 9: 
+                    oHex = 0x18;
+                    break;
+                default:
+                    oHex = 0x7F;
+              }
+              
+              return oHex;
+        }
+
+        //function:  Dec_to_Hexdisplay
+        //description: converts a 4 bit BCD number to 7 segment display format
+        void Dec_to_Hexdisplay (int value_to_convert, int base_address_least_significant_hex, int hex_significant)
+        {
+            int base_10_divider = 10;
+            int address_offset = 4;
+            int oHEX;
+            div_t divide_result;
+
+            divide_result = div(value_to_convert,base_10_divider);
+
+            while ( divide_result.quot > 9 )
+            {
+                if ( base_10_divider > (hex_significant-1)*10 )
+                {
+                    value_to_convert = value_to_convert - divide_result.quot * base_10_divider;
+                    base_10_divider = base_10_divider / 10;
+                    divide_result = div(value_to_convert,base_10_divider);
+                    address_offset = address_offset - 4;
+                }
+                else
+                {
+                    base_10_divider = 10 * base_10_divider;
+                    address_offset = 4 + address_offset;
+                    divide_result = div(value_to_convert,base_10_divider);
+                }
+                
+            }
+
+            while ( address_offset > -1 )
+            {
+                oHEX = Hexdisplay(divide_result.quot);
+                IOWR (base_address_least_significant_hex, address_offset, oHEX);
+                value_to_convert = value_to_convert - divide_result.quot * base_10_divider;
+                base_10_divider = base_10_divider / 10;
+                divide_result = div(value_to_convert,base_10_divider);
+                address_offset = address_offset - 4;
+            }
+        }
+
+        // Prints "Hello World" and sleeps for three seconds 
+        void task2(void* pdata)
+        {
+          while (1)
+          { 
+            printf("Hello from task2\n");
+            OSTimeDlyHMSM(0, 0, 3, 0);
+          }
+        }
+
+        //Prints "Hello World" and sleeps for three seconds and create another task
+        void task1(void* pdata)
+        {
+          int HEX6 = 0x00081090;
+          OSStatInit();
+          printf ("OSIdleCtrMax => %ld\n", OSIdleCtrMax);
+          printf ("OSCPUUsage => %d\n",OSCPUUsage);
+          int hex_significant = 2;
+          int trial = 20;
+          Dec_to_Hexdisplay (trial, HEX6, hex_significant);
+          
+          OSTaskCreateExt(task2,
+                          NULL,
+                          (void *)&task2_stk[TASK_STACKSIZE-1],
+                          TASK2_PRIORITY,
+                          TASK2_PRIORITY,
+                          task2_stk,
+                          TASK_STACKSIZE,
+                          NULL,
+                          0);
+          while (1)
+          { 
+            printf ("constant print OSCPUUsage => %d\n",OSCPUUsage);
+            printf("Hello from task1\n");
+            OSTimeDlyHMSM(0, 0, 3, 0);
+          }
+        }
+
+        // The main function creates one task and starts multi-tasking 
+        int main(void)
+        {
+
+          OSTaskCreateExt(task1,
+                          NULL,
+                          (void *)&task1_stk[TASK_STACKSIZE-1],
+                          TASK1_PRIORITY,
+                          TASK1_PRIORITY,
+                          task1_stk,
+                          TASK_STACKSIZE,
+                          NULL,
+                          0);            
+               
+          OSStart();
+          return 0;
+        }
+/*      end of code*/
+
+
+/*      Code for 3.5                                 *     //add "/" to enable the code and remove "/" to disable the code
+
+        //function:  Hexdisplay
+        //description: converts a 4 bit BCD number to 7 segment display format
+        void Hexdisplay(int iBinary4, int* oHex)
+        {
+              switch (iBinary4)
+              {
+                case 0:
+                    *oHex = 0x40;
+                    break;
+                case 1:
+                    *oHex = 0x79;
+                    break;
+                case 2: 
+                    *oHex = 0x24;
+                    break;
+                case 3: 
+                    *oHex = 0x30;
+                    break;
+                case 4:
+                    *oHex = 0x19;
+                    break;
+                case 5: 
+                    *oHex = 0x12;
+                    break;
+                case 6:
+                    *oHex = 0x20;
+                    break;
+                case 7: 
+                    *oHex = 0x78;
+                    break;
+                case 8:
+                    *oHex = 0x0;
+                    break;
+                case 9: 
+                    *oHex = 0x18;
+                    break;
+                default:
+                    *oHex = 0x7F;
+              }
+        }
+
+        //function:  task1
+        //description: increase clock's timer and display to HEX
+        void task1(void* pdata)
+        {
+         #define HEX7 = (int*) 0x000810a0;
+         #define HEX6 = (int*) 0x00081090;
+         #define HEX5 = (int*) 0x00081080;
+         #define HEX4 = (int*) 0x00081070;
+         #define HEX3 = (int*) 0x00081060;
+         #define HEX2 = (int*) 0x00081050;
+         #define HEX1 = (int*) 0x00081040;
+         #define HEX0 = (int*) 0x00081030;
+         
+         int hour_MSF = 0;
+         int hour_LSF = 0;
+         int min_MSF = 0;
+         int min_LSF = 0;
+         int sec_MSF = 0;
+         int sec_LSF = 0;
+
+         int* display_hour_MSF;
+         int* display_hour_LSF;
+         int* display_min_MSF;
+         int* display_min_LSF;
+         int* display_sec_MSF;
+         int* display_sec_LSF;
+          
+          while (1)
+          { 
+
+            sec_LSF = sec_LSF + 1;
+
+            if (sec_LSF == 10)
+            {
+            sec_LSF = 0;
+            sec_MSF = sec_MSF + 1;
+            }
+
+            if (sec_MSF == 60)
+            {
+            sec_MSF = 0;
+            min_LSF = min_LSF + 1;
+            }
+
+            if (min_LSF == 10)
+            {
+            min_LSF = 0;
+            min_MSF = min_MSF + 1;
+            }
+
+            if (min_MSF == 60)
+            {
+            min_MSF = 4;
+            hour_LSF = hour_LSF + 1;
+            }
+
+
+            if (hour_LSF == 10)
+            {
+            hour_LSF = 0;
+            hour_MSF = hour_MSF + 1;
+            }
+
+            Hexdisplay( sec_LSF, display_sec_LSF);
+            Hexdisplay( sec_MSF, display_sec_MSF);
+            Hexdisplay( min_LSF, display_min_LSF);
+            Hexdisplay( min_HSF, display_min_MSF);
+            Hexdisplay( hour_LSF, display_hour_LSF);
+            Hexdisplay( hour_HSF, display_hour_MSF);
+
+            IOWR(HEX7,0,*display_sec_MSF);
+            IOWR(HEX6,0,*display_sec_LSF);
+            IOWR(HEX5,0,*display_min_MSF);
+            IOWR(HEX4,0,*display_min_LSF);
+            IOWR(HEX3,0,*display_hour_MSF);
+            IOWR(HEX2,0,*display_hour_LSF);
+            IOWR(HEX1,0,0x7F);
+            IOWR(HEX0,0,0x7F);
+
+            OSTimeDlyHMSM(0, 0, 1, 0);
+          }
+        }
+        
+// The main function creates two task and starts multi-tasking 
+        int main(void)
+        {
+
+          OSTaskCreateExt(task1,
+                          NULL,
+                          (void *)&task1_stk[TASK_STACKSIZE-1],
+                          PRIORITY_3,
+                          PRIORITY_3,
+                          task1_stk,
+                          TASK_STACKSIZE,
+                          NULL,
+                          0);            
+               
+          OSStart();
+          return 0;
+        }
+/*      end of code*/
+
+
+/******************************************************************************
+*                                                                             *
+* License Agreement                                                           *
+*                                                                             *
+* Copyright (c) 2004 Altera Corporation, San Jose, California, USA.           *
+* All rights reserved.                                                        *
+*                                                                             *
+* Permission is hereby granted, free of charge, to any person obtaining a     *
+* copy of this software and associated documentation files (the "Software"),  *
+* to deal in the Software without restriction, including without limitation   *
+* the rights to use, copy, modify, merge, publish, distribute, sublicense,    *
+* and/or sell copies of the Software, and to permit persons to whom the       *
+* Software is furnished to do so, subject to the following conditions:        *
+*                                                                             *
+* The above copyright notice and this permission notice shall be included in  *
+* all copies or substantial portions of the Software.                         *
+*                                                                             *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  *
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,    *
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      *
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING     *
+* FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER         *
+* DEALINGS IN THE SOFTWARE.                                                   *
+*                                                                             *
+* This agreement shall be governed in all respects by the laws of the State   *
+* of California and by the laws of the United States of America.              *
+* Altera does not recommend, suggest or require that this reference design    *
+* file be used in conjunction or combination with any other product.          *
+******************************************************************************/

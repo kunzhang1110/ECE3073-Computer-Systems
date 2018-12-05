@@ -1,0 +1,16 @@
+Fitter Status : Successful - Wed Mar 20 11:07:48 2013
+Quartus II 64-Bit Version : 10.1 Build 197 01/19/2011 SP 1 SJ Full Version
+Revision Name : zmc_lab2
+Top-level Entity Name : zmc_lab2
+Family : Cyclone II
+Device : EP2C35F672C6
+Timing Models : Final
+Total logic elements : 1,206 / 33,216 ( 4 % )
+    Total combinational functions : 1,139 / 33,216 ( 3 % )
+    Dedicated logic registers : 564 / 33,216 ( 2 % )
+Total registers : 564
+Total pins : 12 / 475 ( 3 % )
+Total virtual pins : 0
+Total memory bits : 83,968 / 483,840 ( 17 % )
+Embedded Multiplier 9-bit elements : 0 / 70 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )

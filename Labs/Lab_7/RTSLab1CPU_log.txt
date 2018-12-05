@@ -1,0 +1,102 @@
+Altera SOPC Builder Version 10.11 Build 197
+Copyright (c) 1999-2009 Altera Corporation.  All rights reserved.
+
+
+No .sopc_builder configuration file(!)
+# 2013.05.15 09:20:51 (*) mk_custom_sdk starting
+# 2013.05.15 09:20:51 (*) Reading project E:/ECE3073_labs/Lab_7/RTSLab1CPU.ptf.
+
+# 2013.05.15 09:20:51 (*) Finding all CPUs
+# 2013.05.15 09:20:51 (*) Finding all available components
+
+# 2013.05.15 09:20:52 (*) Reading E:/ECE3073_labs/Lab_7/.sopc_builder/install.ptf
+# 2013.05.15 09:20:52 (*) Found 64 components
+
+# 2013.05.15 09:20:52 (*) Finding all peripherals
+
+# 2013.05.15 09:20:52 (*) Finding software components
+
+# 2013.05.15 09:20:53 (*) (Legacy SDK Generation Skipped)
+# 2013.05.15 09:20:53 (*) (All TCL Script Generation Skipped)
+# 2013.05.15 09:20:53 (*) (No Libraries Built)
+# 2013.05.15 09:20:53 (*) (Contents Generation Skipped)
+# 2013.05.15 09:20:53 (*) mk_custom_sdk finishing
+# 2013.05.15 09:20:53 (*) Starting generation for system: RTSLab1CPU.
+
+.
+.
+.
+..........
+.
+
+# 2013.05.15 09:20:54 (*) Running Generator Program for cpu_0
+
+# 2013.05.15 09:20:59 (*) Starting Nios II generation
+# 2013.05.15 09:20:59 (*)   Checking for plaintext license.
+# 2013.05.15 09:21:00 (*)   Plaintext license not found.
+# 2013.05.15 09:21:00 (*)   Checking for encrypted license (non-evaluation).
+# 2013.05.15 09:21:01 (*)   Encrypted license found.  SOF will not be time-limited.
+# 2013.05.15 09:21:01 (*)   Getting CPU configuration settings
+# 2013.05.15 09:21:01 (*)   Elaborating CPU configuration settings
+# 2013.05.15 09:21:01 (*)   Creating all objects for CPU
+
+# 2013.05.15 09:21:01 (*)     Testbench
+# 2013.05.15 09:21:01 (*)     Instruction decoding
+# 2013.05.15 09:21:01 (*)       Instruction fields
+# 2013.05.15 09:21:02 (*)       Instruction decodes
+# 2013.05.15 09:21:02 (*)       Signals for RTL simulation waveforms
+# 2013.05.15 09:21:02 (*)       Instruction controls
+# 2013.05.15 09:21:02 (*)     Pipeline frontend
+# 2013.05.15 09:21:03 (*)     Pipeline backend
+# 2013.05.15 09:21:07 (*)   Generating HDL from CPU objects
+# 2013.05.15 09:21:11 (*)   Creating encrypted HDL
+
+# 2013.05.15 09:21:13 (*) Done Nios II generation
+
+# 2013.05.15 09:21:13 (*) Running Generator Program for jtag_uart_0
+
+# 2013.05.15 09:21:16 (*) Running Generator Program for lcd_0
+
+# 2013.05.15 09:21:17 (*) Running Generator Program for HEX0
+
+# 2013.05.15 09:21:19 (*) Running Generator Program for HEX1
+
+# 2013.05.15 09:21:21 (*) Running Generator Program for HEX2
+
+# 2013.05.15 09:21:23 (*) Running Generator Program for HEX3
+
+# 2013.05.15 09:21:25 (*) Running Generator Program for HEX4
+
+# 2013.05.15 09:21:27 (*) Running Generator Program for HEX5
+
+# 2013.05.15 09:21:29 (*) Running Generator Program for HEX6
+
+# 2013.05.15 09:21:32 (*) Running Generator Program for HEX7
+
+# 2013.05.15 09:21:34 (*) Running Generator Program for LEDG
+
+# 2013.05.15 09:21:35 (*) Running Generator Program for KEY
+
+# 2013.05.15 09:21:37 (*) Running Generator Program for timer_0
+
+
+# 2013.05.15 09:21:39 (*) Making arbitration and system (top) modules.
+
+# 2013.05.15 09:21:45 (*) Generating Quartus symbol for top level: RTSLab1CPU
+
+# 2013.05.15 09:21:45 (*) Symbol E:/ECE3073_labs/Lab_7/RTSLab1CPU.bsf already exists, no need to regenerate
+# 2013.05.15 09:21:45 (*) Creating command-line system-generation script: E:/ECE3073_labs/Lab_7/RTSLab1CPU_generation_script
+
+# 2013.05.15 09:21:45 (*) Running setup for HDL simulator: modelsim
+
+
+# 2013.05.15 09:21:46 (*) Completed generation for system: RTSLab1CPU.
+# 2013.05.15 09:21:46 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
+  SOPC Builder database : E:/ECE3073_labs/Lab_7/RTSLab1CPU.ptf 
+  System HDL Model : E:/ECE3073_labs/Lab_7/RTSLab1CPU.v 
+  System Generation Script : E:/ECE3073_labs/Lab_7/RTSLab1CPU_generation_script 
+
+# 2013.05.15 09:21:46 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
+
+
+Press 'Exit' to exit.

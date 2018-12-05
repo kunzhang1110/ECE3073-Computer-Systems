@@ -1,0 +1,11 @@
+# clk_0
+# cpu_0
+set_global_assignment -name SDC_FILE [file join $::quartus(qip_path) cpu_0.sdc]
+set_global_assignment -name SOURCE_FILE [file join $::quartus(qip_path) cpu_0.ocp]
+# Onchip_RAM
+# Onchip_ROM
+# LEDPIO
+# FlagPIO
+# null
+set_global_assignment -name SOPC_BUILDER_SIGNATURE_ID 18A905EBEA3E0000013D851AC64D 
+ 

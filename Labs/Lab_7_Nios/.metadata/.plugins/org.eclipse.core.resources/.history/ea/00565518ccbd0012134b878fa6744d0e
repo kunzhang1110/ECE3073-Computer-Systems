@@ -1,0 +1,735 @@
+#include<stdio.h> 
+#include "includes.h"
+#include "system.h" // contains definitions of device addresses/IRQs 
+                    // eg KEY_BASE, KEY_IRQ. Use these symbols so your code will still 
+                    // work after a change in SOPC addresses or IRQs 
+#include "altera_avalon_pio_regs.h"
+#include "alt_types.h"
+#include "sys/alt_irq.h"
+#include "io.h"
+
+/*
+*********************************************************************************************************
+*                                                CONSTANTS
+*********************************************************************************************************
+*/
+#define PRIORITY_1      1
+#define PRIORITY_2      2
+#define PRIORITY_3      3
+
+#define   TASK_STACKSIZE       2048
+
+/*
+*********************************************************************************************************
+*                                                VARIABLES
+*********************************************************************************************************
+*/
+
+OS_STK    task1_stk[TASK_STACKSIZE];
+OS_STK    task2_stk[TASK_STACKSIZE];
+OS_STK    task3_stk[TASK_STACKSIZE];
+OS_STK    task4_stk[TASK_STACKSIZE];
+OS_STK    task5_stk[TASK_STACKSIZE];
+OS_STK    task6_stk[TASK_STACKSIZE];
+OS_STK    task7_stk[TASK_STACKSIZE];
+
+void* context; // Declare a global variable to hold the edge capture value for interrupt
+OS_EVENT * sem_key_change;  // semaphore declaration
+OS_EVENT * sem_hour_increase;  // semaphore declaration
+OS_EVENT * sem_min_increase;  // semaphore declaration
+OS_EVENT * sem_display_change;  // semaphore declaration
+OS_EVENT * sem_alarm_light;  // semaphore declaration
+
+OS_EVENT * SemMutex;
+
+/*
+*********************************************************************************************************
+*                                            MACROS
+*********************************************************************************************************
+*/
+
+#define CS(x)       OSSemPend(SemMutex, 0, &err); x; OSSemPost(SemMutex);
+
+/*
+*********************************************************************************************************
+*                       FUNCTION Perror - checks for errors and aborts if necessary
+*                                  Perr - aborts with message unconditionally
+*********************************************************************************************************
+*/
+void Perr(char *msg)
+{
+    OSSchedLock();
+    printf("%s\n", msg);
+    while (1) 
+    {} // Burning CPU cycles but not going anywhere :-)
+} /* Perr*/
+
+void Perror(int error_code, char *msg)
+{
+    if (error_code != OS_NO_ERR)
+    {
+        printf("Error code: %d\n", error_code);
+        Perr(msg);
+    }
+} /*Perror */
+
+/* - Add slash at begining
+//*********************************************************************************************************
+//                                           Section 3.2 Start
+//*********************************************************************************************************
+
+
+
+//*********************************************************************************************************
+//                                           FUNCTION KeyISR - Key Interrupt Service Routine
+//*********************************************************************************************************
+
+static void KeyISR(void* isr_context, alt_u32 id) 
+{ 
+    // cast the context pointer to an integer pointer.
+    volatile int* edge_capture_ptr = (volatile int*) isr_context;
+
+    // Read the edge capture register on the KEY PIO.
+    // Store value.
+    *edge_capture_ptr = IORD(KEY_BASE,3);
+
+    // Write to the edge capture register to reset it.
+    IOWR (KEY_BASE,3,0xF);
+
+    //reset interrupt capability / interruptmask for the Key PIO.
+
+//    // function based on the interrupt type
+//    if ( *edge_capture_ptr == 0x1 )
+//        printf (" KEY0 interrupt \n");
+//    else if ( *edge_capture_ptr == 0x2 )
+//        printf (" KEY1 interrupt \n");
+//    else if ( *edge_capture_ptr == 0x4 )
+//        printf (" KEY2 interrupt \n");
+//    else if ( *edge_capture_ptr == 0x8 )
+//        printf (" KEY3 interrupt \n");
+//
+//    // signal semaphore for sem_key_change
+//    printf (" Signaling sem_key_change \n");
+    OSSemPost(sem_key_change);
+} 
+
+//*********************************************************************************************************
+//                                           THREAD Task1 Low Priority
+//*********************************************************************************************************
+void Task1 (void* pdata)
+{
+    while (1)
+    {
+        printf (" Task1 Low Priority \n");
+        OSTimeDlyHMSM(0,0,5,0); 
+    }
+}
+
+//*********************************************************************************************************
+//                                           THREAD Task2 High Priority with OSSemPend
+//*********************************************************************************************************
+void Task2 (void* pdata)
+{
+    INT8U err;
+    INT8U status;
+
+    while (1)
+    {
+        status = IORD(KEY_BASE,0);
+        printf (" KEY status before wait %d \n", status);
+        printf (" Wait signal for sem_key_change \n");
+        OSSemPend (sem_key_change, 0, &err);
+        printf (" Received signal for sem_key_change \n");
+//        status = IORD(KEY_BASE,0);
+//        printf (" KEY status after signal %d \n\n", status);
+        OSTimeDly(10); 
+    }
+}
+//*********************************************************************************************************
+//                                           FUNCTION main - create task
+//*********************************************************************************************************
+int main(void) 
+{ 
+    INT8U  err;
+
+    // initialize semaphore and checking
+    sem_key_change = OSSemCreate(0);
+    if (sem_key_change==0) Perr("StartTask failed to create sem_key_change");
+
+    // clear KEY PIO interrupt capture register,
+    // hence clears any pending interrupts 
+    IOWR(KEY_BASE, 3, 0xF);
+
+    // registers and enables KEY_IRQ to interrupt
+    alt_irq_register(KEY_IRQ, context, KeyISR); 
+
+    // enable edge capture bits to generate interrupt for lowest 4 bits 
+    IOWR(KEY_BASE, 2, 0xF ); 
+
+    // Task creation and checking 
+    err = OSTaskCreateExt(Task1,
+                        NULL,
+                        (OS_STK *)&task1_stk[TASK_STACKSIZE],
+                        PRIORITY_3,
+                        PRIORITY_3,
+                        task1_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Task1 ..) failed"); // checks err and exits if an error printing message - see app.c
+   
+    err = OSTaskCreateExt(Task2,
+                        NULL,
+                        (OS_STK *)&task2_stk[TASK_STACKSIZE],
+                        PRIORITY_2,
+                        PRIORITY_2,
+                        task2_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Task2 ..) failed"); // checks err and exits if an error printing message - see app.c  
+    
+
+    OSStart(); 
+
+
+    OSStart();  
+}
+
+//*********************************************************************************************************
+//                                           Section 3.2 End
+/********************************************************************************************************/
+
+
+//* - Add slash at begining
+//*********************************************************************************************************
+//                                           Section 3.3 Start
+//*********************************************************************************************************
+
+//*********************************************************************************************************
+//	HEX7, HEX6 - Clock / Alarm Hour
+//	HEX5, HEX4 - Clock / Alarm Minutes
+//	HEX3, HEX2 - Clock / Alarm Second
+//	HEX1 - Edit Mode Indicator, E indicate in edit mode
+//  HEX0 - Alarm Mode Indicator, A indicate alarm on
+
+//	KEY0 - Enter or exit edit mode for the displayed time
+//  KEY1 - Not in edit mode => Change alarm mode
+//		   In edit mode => Increase displayed minutes by 1 minute per click
+//  KEY2 - Not in edit mode => Change display between clock or alarm
+//		   In edit mode => Increase displayed hour by 1 hour per click
+
+//*********************************************************************************************************
+
+int HEX7 = 0x000810a0;
+int HEX6 = 0x00081090;
+int HEX5 = 0x00081080;
+int HEX4 = 0x00081070;
+int HEX3 = 0x00081060;
+int HEX2 = 0x00081050;
+int HEX1 = 0x00081040;
+int HEX0 = 0x00081030;
+
+int display_selection = 0; // 0 for clock, 1 for alarm
+int edit_selection = 0;
+int alarm_selection = 0;
+int clock_hour = 0;
+int clock_min = 0;
+int clock_sec = 0;
+int alarm_hour = 0;
+int alarm_min = 0;
+
+//*********************************************************************************************************
+//               FUNCTION Hexdisplay - converts to 7 segment display format and display
+//*********************************************************************************************************
+void Hexdisplay(int iBinary4, int HEX_address, int HEX_address_offset)
+{
+        int oHex;
+              
+        switch (iBinary4)
+        {
+        case 0:
+            oHex = 0x40;
+            break;
+        case 1:
+            oHex = 0x79;
+            break;
+        case 2: 
+            oHex = 0x24;
+            break;
+        case 3: 
+            oHex = 0x30;
+            break;
+        case 4:
+            oHex = 0x19;
+            break;
+        case 5: 
+            oHex = 0x12;
+            break;
+        case 6:
+            oHex = 0x02;
+            break;
+        case 7: 
+            oHex = 0x78;
+            break;
+        case 8:
+            oHex = 0x0;
+            break;
+        case 9: 
+            oHex = 0x10;
+            break;
+        case 10: 
+            oHex = 0x08; // A
+            break;
+        case 11: 
+            oHex = 0x06; // E
+            break;
+        default:
+            oHex = 0x7F; // All off
+        }
+
+        IOWR(HEX_address, HEX_address_offset, oHex);
+}
+
+//*********************************************************************************************************
+//               FUNCTION LEDG_frequent_power - high frequency turning LEDG on / off
+//*********************************************************************************************************
+INT8U LEDG_frequent_power (INT8U brightness, INT8U accumulator, INT8U *power, int LEDG_address, int LEDGX)
+{
+    accumulator += brightness;
+    if (accumulator >= 32 )
+    {
+        accumulator -= 32;
+        *power = *power | LEDGX;
+        IOWR(LEDG_address,0,*power);
+    }
+    else
+    {
+        *power = *power & ~LEDGX;
+        IOWR(LEDG_address,0,*power);
+    }
+    return (accumulator); 
+}
+
+//*********************************************************************************************************
+//                      INTERRUPT  KeyISR - Key Interrupt Service Routine
+//*********************************************************************************************************
+static void KeyISR(void* isr_context, alt_u32 id) 
+{ 
+    // cast the context pointer to an integer pointer.
+    volatile int* edge_capture_ptr = (volatile int*) isr_context;
+
+    // Read the edge capture register on the KEY PIO.
+    // Store value.
+    *edge_capture_ptr = IORD(KEY_BASE,3);
+
+    // Write to the edge capture register to reset it.
+    IOWR (KEY_BASE,3,0xF);
+
+    //reset interrupt capability / interruptmask for the Key PIO.
+    
+    // Signal sem_key_change
+    OSSemPost(sem_key_change);   
+} 
+
+//*********************************************************************************************************
+//              TASK Interrupt_changes - Respond to KEY presssed, High Priority with OSSemPend
+//*********************************************************************************************************
+void Interrupt_changes (void* pdata)
+{
+    INT8U err;
+    INT8U status;
+
+    while (1)
+    {
+        OSSemPend (sem_key_change, 0, &err);
+        status = IORD(KEY_BASE,0);
+        if (edit_selection == 0)
+        {
+            if (status == 14)   
+            {
+                edit_selection = 1;
+                 Hexdisplay(11, HEX1, 0); 
+            }
+            
+            if (status == 13)   
+            {
+                alarm_selection = ~alarm_selection;
+                if (alarm_selection != 0) Hexdisplay(10, HEX0, 0); // Alarm on
+                if (alarm_selection == 0) Hexdisplay(20, HEX0, 0); // Alarm off
+            }
+            
+            if (status == 11)   
+            {
+                display_selection = ~display_selection;
+                OSSemPost(sem_display_change);
+            }
+        }
+        else
+        {
+            if (status == 14)   
+            {
+                edit_selection = 0;
+                 Hexdisplay(20, HEX1, 0); 
+            }
+            if (status == 13)   OSSemPost(sem_min_increase);
+            if (status == 11)   OSSemPost(sem_hour_increase);
+        }
+        OSSemPend (sem_key_change, 0, &err);        
+        OSTimeDly(5); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK Hour_increase - increase hour of displayed clock
+//*********************************************************************************************************
+void Hour_increase (void* pdata)
+{
+    INT8U err;
+    
+    while (1)
+    {
+        OSSemPend(sem_hour_increase, 0, &err);
+        if (display_selection == 0)
+        {
+            clock_hour = clock_hour + 1;
+            if (clock_hour == 24)
+            {
+                clock_hour = 0;
+            }
+            Hexdisplay(clock_hour/10, HEX7, 0);
+            Hexdisplay(clock_hour%10, HEX6, 0);
+        }
+        else
+        {
+            alarm_hour = alarm_hour + 1;
+            if (alarm_hour == 24)
+            {
+                alarm_hour = 0;
+            }
+            Hexdisplay(alarm_hour/10, HEX7, 0);
+            Hexdisplay(alarm_hour%10, HEX6, 0);
+        }
+        OSTimeDly(5); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK Min_increase - increase hour of displayed clock
+//*********************************************************************************************************
+void Min_increase (void* pdata)
+{
+    INT8U err;
+    
+    while (1)
+    {
+        OSSemPend(sem_min_increase, 0, &err);
+        if (display_selection == 0)
+        {
+            clock_min = clock_min + 1;
+            if (clock_min == 60)
+            {
+                clock_min = 0;
+            }
+            Hexdisplay(clock_min/10, HEX5, 0);
+            Hexdisplay(clock_min%10, HEX4, 0);
+        }
+        else
+        {
+            alarm_min = alarm_min + 1;
+            if (alarm_min == 60)
+            {
+                alarm_min = 0;
+            }            
+            Hexdisplay(alarm_min/10, HEX5, 0);
+            Hexdisplay(alarm_min%10, HEX4, 0);
+        }
+        OSTimeDly(5); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK Display_change - change display faster
+//*********************************************************************************************************
+void Display_change (void* pdata)
+{
+    INT8U err;
+    
+    while (1)
+    {
+        
+        OSSemPend(sem_display_change, 0, &err);
+      CS(
+        if (display_selection == 0)
+        {
+            Hexdisplay(clock_hour/10, HEX7, 0);
+            Hexdisplay(clock_hour%10, HEX6, 0);
+            Hexdisplay(clock_min/10, HEX5, 0);
+            Hexdisplay(clock_min%10, HEX4, 0);
+            Hexdisplay(clock_sec/10, HEX3, 0);
+            Hexdisplay(clock_sec%10, HEX2, 0);
+        }
+        else
+        {
+            Hexdisplay(alarm_hour/10, HEX7, 0);
+            Hexdisplay(alarm_hour%10, HEX6, 0);
+            Hexdisplay(alarm_min/10, HEX5, 0);
+            Hexdisplay(alarm_min%10, HEX4, 0);
+            Hexdisplay(0, HEX3, 0);
+            Hexdisplay(0, HEX2, 0);
+        }
+        )
+        OSTimeDly(5); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK Clock_counter - count clock and display them
+//*********************************************************************************************************
+void Clock_counter (void* pdata)
+{
+    INT8U err; // critical section required this variable
+    
+    while (1)
+    {
+      // critical section to avoid wrong addition to the value after been change by high priority tasks eg hour and mins  
+      CS(  
+        if (edit_selection == 0 || display_selection != 0 )
+        {
+            clock_sec = clock_sec + 1;
+    
+            if (clock_sec == 60)
+            {
+                clock_sec = 0;
+                clock_min = clock_min + 1;
+            }
+    
+            if (clock_min == 60)
+            {
+                clock_min = 0;
+                clock_hour = clock_hour + 1;
+            }
+    
+            if (clock_hour == 24)
+            {
+                clock_hour = 0;
+            }
+        
+            if (display_selection == 0)
+            {
+                Hexdisplay(clock_hour/10, HEX7, 0);
+                Hexdisplay(clock_hour%10, HEX6, 0);
+                Hexdisplay(clock_min/10, HEX5, 0);
+                Hexdisplay(clock_min%10, HEX4, 0);
+                Hexdisplay(clock_sec/10, HEX3, 0);
+                Hexdisplay(clock_sec%10, HEX2, 0);
+            }         
+        }
+        )
+        OSTimeDlyHMSM(0,0,1,0); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK Alarm_counter - 
+//*********************************************************************************************************
+void Alarm_counter (void* pdata)
+{
+    while (1)
+    {
+        if (alarm_selection != 0 && edit_selection == 0 && clock_hour == alarm_hour && clock_min == alarm_min)
+        {
+            OSSemPost(sem_alarm_light);
+            OSSemAccept(sem_alarm_light); // to maintain the sem_alarm_light count at 1 if post occur before any pend
+        }
+        OSTimeDlyHMSM(0,0,5,0); 
+    }
+}
+
+//*********************************************************************************************************
+//                              TASK LEDG_Duration - Adjust the time the LEDG on/off
+//*********************************************************************************************************
+void LEDG_Duration (void* pdata)
+{
+     INT8U err;
+     int i;
+     int m;
+     int LEDG_address = 0x000810b0;
+     INT8U power = 0;
+     INT8U brightness [8] = {2,6,10,14,16,20,24,28};
+     INT8U accumulator[8] = {0,0,0,0,0,0,0,0};
+     int gradient [8] = {0,0,0,0,0,0,0,0}; 
+     
+    while (1)
+    {
+        m = 0;
+ 
+        OSSemPend(sem_alarm_light, 0, &err);
+         while ( m < 3000) // control how long the LEDR wave oscillate about 100 per second
+         {
+            //INT8U LEDG_frequent_power (INT8U *brightness, int gradient, INT8U accumulator, INT8U *power, int LEDG_address, int LEDGX)
+           
+            for (i = 0; i<800; i++) // control how fast the LEDR wave oscillate
+            {                  
+                // LED oscillation
+                accumulator[0] = LEDG_frequent_power ( brightness[0], accumulator[0], &power, LEDG_address, 1 );
+                accumulator[1] = LEDG_frequent_power ( brightness[1], accumulator[1], &power, LEDG_address, 2 );
+                accumulator[2] = LEDG_frequent_power ( brightness[2], accumulator[2], &power, LEDG_address, 4 );
+                accumulator[3] = LEDG_frequent_power ( brightness[3], accumulator[3], &power, LEDG_address, 8 );
+                accumulator[4] = LEDG_frequent_power ( brightness[4], accumulator[4], &power, LEDG_address, 16 );
+                accumulator[5] = LEDG_frequent_power ( brightness[5], accumulator[5], &power, LEDG_address, 32 );
+                accumulator[6] = LEDG_frequent_power ( brightness[6], accumulator[6], &power, LEDG_address, 64 );
+                accumulator[7] = LEDG_frequent_power ( brightness[7], accumulator[7], &power, LEDG_address, 128 );
+                
+            }            
+            
+                                   
+            for (i = 0; i<8; i++)
+            {
+                if (gradient[i] == 0 && brightness[i] <32)
+                {
+                brightness[i] ++;
+                if (brightness[i] == 32)
+                    gradient[i] = 1;
+                }
+                else if (gradient[i] == 1 && brightness[i] > 0)
+                {
+                brightness[i] --;
+                if (brightness[i] == 0)
+                    gradient[i] = 0;
+                }
+            }
+            m ++;
+            OSTimeDly(1); // to allow low priority task to run 
+             
+       }
+	   IOWR(LEDG_address,0,0);
+       OSTimeDlyHMSM(0,1,0,0); // control how many oscillations within the 1 min that alarm same time as clock  
+    }
+}
+
+
+//*********************************************************************************************************
+//                                           FUNCTION main - create task
+//*********************************************************************************************************
+int main(void) 
+{ 
+    INT8U  err;
+
+    // initialize semaphore and checking
+    sem_key_change = OSSemCreate(0);
+    if (sem_key_change==0) Perr("StartTask failed to create sem_key_change");
+    
+    sem_hour_increase = OSSemCreate(0);
+    if (sem_hour_increase==0) Perr("StartTask failed to create sem_hour_increase");
+    
+    sem_min_increase = OSSemCreate(0);
+    if (sem_min_increase==0) Perr("StartTask failed to create sem_min_increase");       
+    
+    sem_display_change = OSSemCreate(0);
+    if (sem_display_change==0) Perr("StartTask failed to create sem_display_change");
+    
+    sem_alarm_light = OSSemCreate(0);
+    if (sem_alarm_light==0) Perr("StartTask failed to create sem_alarm_light");     
+    
+    // clear KEY PIO interrupt capture register,
+    // hence clears any pending interrupts 
+    IOWR(KEY_BASE, 3, 0xF);
+
+    // registers and enables KEY_IRQ to interrupt
+    alt_irq_register(KEY_IRQ, context, KeyISR); 
+
+    // enable edge capture bits to generate interrupt for lowest 4 bits 
+    IOWR(KEY_BASE, 2, 0xF ); 
+
+    // clear the display on unused HEX
+    Hexdisplay(20, HEX1, 0);
+    Hexdisplay(20, HEX0, 0);
+    
+    // Task creation and checking
+	// Priority 1,2,3 saved for MUTEX resources
+
+	 err = OSTaskCreateExt(LEDG_Duration,
+                        NULL,
+                        (OS_STK *)&task7_stk[TASK_STACKSIZE-1],
+                        4, // highest priority so that the waveform will not be disturb
+                        4,
+                        task7_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(LEDG_Duration ..) failed"); // checks err and exits if an error printing message
+    
+    err = OSTaskCreateExt(Hour_increase,
+                        NULL,
+                        (OS_STK *)&task3_stk[TASK_STACKSIZE-1],
+                        5, // high priority as less task to do so that will not disturb task that are long
+                        5,
+                        task3_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Hour_increase ..) failed"); // checks err and exits if an error printing message
+	
+	err = OSTaskCreateExt(Min_increase,
+                        NULL,
+                        (OS_STK *)&task4_stk[TASK_STACKSIZE-1],
+                        6, // high priority as less task to do so that will not disturb task that are long
+                        6,
+                        task4_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Min_increase ..) failed"); // checks err and exits if an error printing message
+    
+   err = OSTaskCreateExt(Display_change,
+                        NULL,
+                        (OS_STK *)&task5_stk[TASK_STACKSIZE-1],
+                        7, // high priority as less task to do so that will not disturb task that are long
+                        7,
+                        task5_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Display_change ..) failed"); // checks err and exits if an error printing message
+    
+   err = OSTaskCreateExt(Interrupt_changes,
+                        NULL,
+                        (OS_STK *)&task2_stk[TASK_STACKSIZE-1],
+                        8, // lower priority than those changes that occur to ensure those changes run until next pending to avoid semaphore value not equal 0
+                        8,
+                        task2_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Interrupt_changes ..) failed"); // checks err and exits if an error printing message
+    
+	err = OSTaskCreateExt(Clock_counter,
+                        NULL,
+                        (OS_STK *)&task1_stk[TASK_STACKSIZE-1],
+                        9,
+                        9,
+                        task1_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Clock_counter ..) failed"); // checks err and exits if an error printing message
+
+	err = OSTaskCreateExt(Alarm_counter,
+                        NULL,
+                        (OS_STK *)&task6_stk[TASK_STACKSIZE-1],
+                        10,
+                        10,
+                        task6_stk,
+                        TASK_STACKSIZE,
+                        NULL,
+                        0);
+    Perror(err,"ERROR - OSTaskCreate(Alarm_counter ..) failed"); // checks err and exits if an error printing message
+    
+
+        
+    OSStart(); 
+}
+//*********************************************************************************************************
+//                                           Section 3.3 End
+/********************************************************************************************************/

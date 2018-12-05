@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preferences>
+ <debug showDebugMenu="0" />
+ <systemtable filter="Default">
+  <columns>
+   <opcodeName visible="0" />
+   <connections preferredWidth="47" />
+   <irq preferredWidth="34" />
+   <export visible="0" />
+  </columns>
+ </systemtable>
+ <clocktable>
+  <columns>
+   <clockname preferredWidth="282" />
+   <clocksource preferredWidth="282" />
+   <frequency preferredWidth="250" />
+  </columns>
+ </clocktable>
+ <window width="1279" height="762" x="483" y="106" />
+ <library
+   expandedCategories="Library/Interface Protocols,Library/University Program,Library,Library/University Program/Communications,Library/Interface Protocols/Serial,Project" />
+</preferences>

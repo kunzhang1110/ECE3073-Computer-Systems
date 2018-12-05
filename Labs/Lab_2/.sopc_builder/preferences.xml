@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preferences>
+ <debug showDebugMenu="0" />
+ <systemtable filter="Default">
+  <columns>
+   <opcodeName visible="0" />
+   <connections preferredWidth="47" />
+   <irq preferredWidth="34" />
+   <export visible="0" />
+  </columns>
+ </systemtable>
+ <clocktable>
+  <columns>
+   <clockname preferredWidth="150" />
+   <clocksource preferredWidth="150" />
+   <frequency preferredWidth="131" />
+  </columns>
+ </clocktable>
+ <window width="900" height="600" x="15" y="4" />
+ <library
+   expandedCategories="Library,Library/Peripherals/Microcontroller Peripherals,Library/Peripherals,Library/Processors,Project,Library/Microcontroller Peripherals" />
+</preferences>

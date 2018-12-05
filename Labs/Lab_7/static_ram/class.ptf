@@ -1,0 +1,287 @@
+#
+# This class.ptf file built by Component Editor
+# 2006.03.13.21:56:09
+#
+# DO NOT MODIFY THIS FILE
+# If you hand-modify this file you will likely
+# interfere with Component Editor's ability to
+# read and edit it. And then Component Editor
+# will overwrite your changes anyway. So, for
+# the very best results, just relax and
+# DO NOT MODIFY THIS FILE
+#
+CLASS static_ram
+{
+   CB_GENERATOR 
+   {
+      HDL_FILES 
+      {
+      }
+      top_module_name = "";
+      emit_system_h = "0";
+   }
+   MODULE_DEFAULTS global_signals
+   {
+      class = "static_ram";
+      class_version = "1.0";
+      SYSTEM_BUILDER_INFO 
+      {
+         Instantiate_In_System_Module = "0";
+         Has_Clock = "1";
+         Top_Level_Ports_Are_Enumerated = "1";
+      }
+      COMPONENT_BUILDER 
+      {
+         GLS_SETTINGS 
+         {
+         }
+      }
+      PORT_WIRING 
+      {
+         PORT clk_0
+         {
+            width = "1";
+            width_expression = "";
+            direction = "input";
+            type = "clk";
+            is_shared = "0";
+            vhdl_record_name = "";
+            vhdl_record_type = "";
+         }
+      }
+      WIZARD_SCRIPT_ARGUMENTS 
+      {
+         hdl_parameters 
+         {
+         }
+      }
+      SIMULATION 
+      {
+         DISPLAY 
+         {
+            SIGNAL x101
+            {
+               name = "Static Ram/global_signals";
+               format = "Divider";
+            }
+            SIGNAL x102
+            {
+               name = "clk_0";
+            }
+            SIGNAL x103
+            {
+               name = "Static Ram/avalon_tristate_slave_0";
+               format = "Divider";
+            }
+            SIGNAL x104
+            {
+               name = "address";
+               radix = "hexadecimal";
+            }
+            SIGNAL x105
+            {
+               name = "read_n";
+            }
+            SIGNAL x106
+            {
+               name = "data";
+               radix = "hexadecimal";
+            }
+            SIGNAL x107
+            {
+               name = "write_n";
+            }
+            SIGNAL x108
+            {
+               name = "byte_enable";
+               radix = "hexadecimal";
+            }
+            SIGNAL x109
+            {
+               name = "chip_select";
+            }
+         }
+      }
+      SLAVE avalon_tristate_slave_0
+      {
+         SYSTEM_BUILDER_INFO 
+         {
+            Bus_Type = "avalon_tristate";
+            Address_Group = "1";
+            Has_Clock = "0";
+            Address_Width = "17";
+            Address_Alignment = "dynamic";
+            Data_Width = "16";
+            Has_Base_Address = "1";
+            Has_IRQ = "0";
+            Setup_Time = "0cycles";
+            Hold_Time = "0cycles";
+            Read_Wait_States = "1cycles";
+            Write_Wait_States = "1cycles";
+            Read_Latency = "0";
+            Maximum_Pending_Read_Transactions = "0";
+            Active_CS_Through_Read_Latency = "0";
+            Is_Printable_Device = "0";
+            Is_Memory_Device = "1";
+            Is_Readable = "1";
+            Is_Writable = "1";
+            Minimum_Uninterrupted_Run_Length = "1";
+         }
+         COMPONENT_BUILDER 
+         {
+            ATS_SETTINGS 
+            {
+               Setup_Value = "0";
+               Read_Wait_Value = "1";
+               Write_Wait_Value = "1";
+               Hold_Value = "0";
+               Timing_Units = "cycles";
+               Read_Latency_Value = "0";
+               Minimum_Arbitration_Shares = "1";
+               Active_CS_Through_Read_Latency = "0";
+               Max_Pending_Read_Transactions_Value = "1";
+               Address_Alignment = "dynamic";
+               Is_Printable_Device = "0";
+               interface_name = "Avalon Tristate Slave";
+               external_wait = "0";
+               Is_Memory_Device = "1";
+            }
+         }
+         PORT_WIRING 
+         {
+            PORT address
+            {
+               width = "17";
+               width_expression = "";
+               direction = "input";
+               type = "address";
+               is_shared = "1";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+            PORT read_n
+            {
+               width = "1";
+               width_expression = "";
+               direction = "input";
+               type = "read_n";
+               is_shared = "0";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+            PORT data
+            {
+               width = "16";
+               width_expression = "";
+               direction = "inout";
+               type = "data";
+               is_shared = "1";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+            PORT write_n
+            {
+               width = "1";
+               width_expression = "";
+               direction = "input";
+               type = "write_n";
+               is_shared = "0";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+            PORT byte_enable
+            {
+               width = "2";
+               width_expression = "";
+               direction = "input";
+               type = "byteenable_n";
+               is_shared = "1";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+            PORT chip_select
+            {
+               width = "1";
+               width_expression = "";
+               direction = "input";
+               type = "chipselect_n";
+               is_shared = "0";
+               vhdl_record_name = "";
+               vhdl_record_type = "";
+            }
+         }
+      }
+   }
+   USER_INTERFACE 
+   {
+      USER_LABELS 
+      {
+         name = "Static Ram";
+         technology = "DE2 Board";
+      }
+      WIZARD_UI the_wizard_ui
+      {
+         title = "Static Ram - {{ $MOD }}";
+         CONTEXT 
+         {
+            H = "WIZARD_SCRIPT_ARGUMENTS/hdl_parameters";
+            M = "";
+            SBI_global_signals = "SYSTEM_BUILDER_INFO";
+            SBI_avalon_tristate_slave_0 = "SLAVE avalon_tristate_slave_0/SYSTEM_BUILDER_INFO";
+         }
+         PAGES main
+         {
+            PAGE 1
+            {
+               align = "left";
+               title = "<b>Static Ram 1.0</b> Settings";
+               layout = "vertical";
+               TEXT 
+               {
+                  title = "Built on: 2006.03.13.21:56:09";
+               }
+               TEXT 
+               {
+                  title = "Class name: static_ram";
+               }
+               TEXT 
+               {
+                  title = "Class version: 1.0";
+               }
+               TEXT 
+               {
+                  title = "Component name: Static Ram";
+               }
+               TEXT 
+               {
+                  title = "Component Group: DE2 Board";
+               }
+            }
+         }
+      }
+   }
+   SOPC_Builder_Version = "5.10";
+   COMPONENT_BUILDER 
+   {
+      HDL_PARAMETERS 
+      {
+         # generated by CBDocument.getParameterContainer
+         # used only by Component Editor
+      }
+      SW_FILES 
+      {
+      }
+      built_on = "2006.03.13.21:56:09";
+      CACHED_HDL_INFO 
+      {
+         # cached hdl info, emitted by CBFrameRealtime.getDocumentCachedHDLInfoSection
+         # used only by Component Builder
+      }
+   }
+   ASSOCIATED_FILES 
+   {
+      Add_Program = "the_wizard_ui";
+      Edit_Program = "the_wizard_ui";
+      Generator_Program = "cb_generator.pl";
+   }
+}
