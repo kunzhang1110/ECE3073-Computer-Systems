@@ -4,7 +4,7 @@
 *Semester 1, 2013*
 
 ## Description
-Fundamentals of C, PLC and Assembly (MIPS) programming.
+Computer System Architecture and operating system fundamentals.
 
 The repository contains my solutions for Labs and notes for revision.
 
